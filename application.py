@@ -1,11 +1,22 @@
+
 import pickle
 import pandas as pd
 from flask import Flask, render_template, request
 
+
+model = pickle.load(open('PD_Model.pkl', 'rb'))
+
 app = Flask(__name__)
-@app.route('/')
+@app.route('/', methods= ['GET', 'POST'])
 def index() :
-    return render_template('index.html')
+    if request.method == 'GET' :
+        return render_template('index.html')
+    else:
+        form_inputs = pd.DataFrame(request.form.to_dict(), index[0])
+        prediction = model.predict(form_inputs)
+        return str(prediction)
+
+
 
 
 if __name__ == "__main__":
